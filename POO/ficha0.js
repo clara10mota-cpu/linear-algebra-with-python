@@ -93,7 +93,6 @@ function calcularValorStock (produtos) {
 
 }
 
-
 console.log("O valor total em stock é: " + calcularValorStock(produtos));
 
 produtosDisponiveis = produtos.filter(produtos => produtos.stock > 0);
@@ -102,6 +101,85 @@ produtosIndisponiveis = produtos.filter(produtos => produtos.stock === 0);
 
 console.log(produtosDisponiveis);
 console.log(produtosIndisponiveis);
+
+
+function descricaoProduto (produtos) {
+  let quantidade = classificarStock(produtos.stock);
+  let etiqueta = produtos.promoção ? "Em promoção" : "preço normal";
+  return `${produtos.nome} - ${produtos.preco} - ${etiqueta} - ${quantidade}`;
+}
+
+produtos.forEach(produtos => {
+  console.log(descricaoProduto (produtos));
+})
+
+
+
+ function renderizarProdutos(produtos) {
+
+  const container = document.getElementById("lista-produtos");
+
+  produtos.forEach(produtos => {
+    const div = document.createElement("div");
+    div.textContent = descricaoProduto(produtos);
+    container.appendChild(div);
+
+  })
+}
+renderizarProdutos(produtos);
+
+
+
+let disponiveis = false;
+
+const botao = document.getElementById("btn-disponiveis");
+
+botao.addEventListener("click",() => {
+  if (disponiveis === false){
+    const disponiveis = produtos.filter(produtos => produtos.stock > 0);
+    renderizarProdutos(disponiveis);
+    botao.textContent ="Mostrar todos ";
+    disponiveis = true;
+  } else {
+    renderizarProdutos(produtos);
+    botao.textContent ="Mostrar disponiveis";
+    disponiveis = false;
+  }
+
+})
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
 
 
 
