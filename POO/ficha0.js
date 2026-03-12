@@ -119,6 +119,8 @@ produtos.forEach(produtos => {
 
   const container = document.getElementById("lista-produtos");
 
+   container.innerHTML = "";
+
   produtos.forEach(produtos => {
     const div = document.createElement("div");
     div.textContent = descricaoProduto(produtos);
@@ -126,9 +128,8 @@ produtos.forEach(produtos => {
 
   })
 }
+
 renderizarProdutos(produtos);
-
-
 
 let disponiveis = false;
 
@@ -148,8 +149,25 @@ botao.addEventListener("click",() => {
 
 })
 
+/* desafio */
 
+function ordenarPorPreco(produtos) {
+  return [...produtos].sort((a, b) => a.preco - b.preco);
+}
 
+renderizarProdutos(ordenarPorPreco(produtos));
+
+const inputPesquisa = document.getElementById("pesquisa");
+
+inputPesquisa.addEventListener("input", function () {
+  const texto = inputPesquisa.value.toLowerCase();
+
+  const produtosFiltrados = produtos.filter((produto) =>
+    produto.nome.toLowerCase().includes(texto)
+  );
+
+  renderizarProdutos(ordenarPorPreco(produtosFiltrados));
+});
 
 
 
