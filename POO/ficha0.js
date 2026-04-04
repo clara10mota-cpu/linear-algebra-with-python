@@ -5,11 +5,13 @@ let stockDisponivel = 14;
 let promoção = true;
 let desconto = undefined;
 
-/* iva  */
+// CALCULO DO IVA //
 
 let iva = preço * 1.23; 
 
 console.log(`${nome} - ${iva.toFixed(2)} (stock : ${stockDisponivel})`);
+
+// DISPONIBILIDADE DO STOCK //
 
 function classificarStock (stockDisponivel) {
 
@@ -26,7 +28,7 @@ function classificarStock (stockDisponivel) {
     }
 }
 
-// testes //
+// TESTES //
 
 console.log(classificarStock(0));
 console.log(classificarStock(4));
@@ -35,10 +37,11 @@ console.log(classificarStock(30));
 
 let emPromocao = promoção ? "Em promoção" : "Preço normal" ;
 
-// testes //
+// TESTES //
 
 console.log(`${emPromocao}`);
 
+// NOVO OBJETO //
 
 const produtos = [
   {
@@ -82,5 +85,139 @@ produtos.forEach (produtos => {
     console.log(produtos.nome.toUpperCase());
 })
 
-/* calcular o valor do stock */
+// CALCULO TOTAL DO VALOR DO STOCK //
+
+function calcularValorStock (produtos) {
+
+  let total = 0;
+
+  produtos.forEach(produto => {
+    total += produto.preco * produto.stock;
+
+  });
+
+  return total;
+
+}
+
+console.log(`Valor total do stock: ${calcularValorStock(produtos)}`);
+
+// PRODUTOS DISPONIVEIS E INDISPONIVEIS //
+
+const produtosDisponiveis = [];
+
+produtos.forEach (produto => {
+  if (produto.stock >0) {
+    produtosDisponiveis.push(produto.nome);
+
+  }
+
+});
+
+const produtosIndisponiveis = [];
+
+produtos.forEach (produto => {
+  if (produto.stock <=0) {
+    produtosIndisponiveis.push(produto.nome);
+
+  }
+
+});
+
+console.log(produtosDisponiveis);
+console.log(produtosIndisponiveis);
+
+
+function descricaoProduto (produto) {
+  return `${produto.nome} - ${produto.preco} - ${classificarStock(produto.stock)} - ${emPromocao}`;
+
+}
+
+produtos.forEach (produto => {
+    console.log(descricaoProduto(produto));
+});
+
+
+// PARTE DOM //
+
+function renderizarProdutos (lista) {
+  const div = document.getElementById("lista-produtos"); /* vai buscar a div  */
+  div.innerHTML = ""; /* limpar o historico da div  */
+  
+  lista.forEach (produto =>{ 
+    const p = document.createElement("p"); /* criar um "p" */
+    p.textContent = descricaoProduto(produto); 
+
+    div.appendChild(p);
+
+  });
+
+}
+
+const botao = document.getElementById("btn-disponiveis");
+
+let mostrarDisponiveis = false;
+
+botao.addEventListener("click", () => {
+  const div = document.getElementById("lista-produtos");
+  div.innerHTML = "";
+
+  if(!mostrarDisponiveis){
+    produtos.forEach (produto => {
+      if(produto.stock > 0) {
+        const p = document.createElement("p");
+        p.textContent = descricaoProduto(produto);
+        div.appendChild(p);
+      }
+    });
+
+    botao.textContent ="Mostrar todos";
+    mostrarDisponiveis = true;
+  } else {
+    produtos.forEach(produto => {
+      const p = document.createElement("p");
+      p.textContent = descricaoProduto(produto);
+      div.appendChild(p);
+    });
+
+    botao.textContent ="Mostrar disponíveis"
+    mostrarDisponiveis = false;
+
+
+  }
+
+});
+
+
+// DESAFIO //
+
+function ordenarPorPreco (produtos) {
+
+  return [...produtos].sort((a,b) => a.preco - b.preco);
+
+}
+
+const produtosOrdenados = ordenarPorPreco (produtos);
+
+renderizarProdutos(ordenarPorPreco(produtos));
+
+function filtrarPorNome(produtos, texto) {
+  return produtos.filter(produto =>
+    produto.nome.toLowerCase().includes(texto.toLowerCase())
+  );
+}
+
+const inputPesquisa = document.getElementById("pesquisa");
+
+inputPesquisa.addEventListener("input", () => {
+  const texto = inputPesquisa.value;
+  const produtosFiltrados = filtrarPorNome(produtos, texto);
+  renderizarProdutos(produtosFiltrados);
+});
+
+
+
+
+
+
 
